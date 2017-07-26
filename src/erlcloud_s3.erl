@@ -2,48 +2,54 @@
 
 -module(erlcloud_s3).
 
--export([new/2, new/3, new/4,
-  configure/2, configure/3, configure/4, configure/5,
-  create_bucket/1, create_bucket/2, create_bucket/3, create_bucket/4,
-  check_bucket_access/1, check_bucket_access/2,
-  delete_bucket/1, delete_bucket/2,
-  get_bucket_attribute/2, get_bucket_attribute/3,
-  list_buckets/0, list_buckets/1,
-  set_bucket_attribute/3, set_bucket_attribute/4,
-  get_bucket_policy/1, get_bucket_policy/2,
-  put_bucket_policy/2, put_bucket_policy/3,
-  get_bucket_lifecycle/1, get_bucket_lifecycle/2,
-  put_bucket_lifecycle/2, put_bucket_lifecycle/3,
-  delete_bucket_lifecycle/1, delete_bucket_lifecycle/2,
-  list_objects/1, list_objects/2, list_objects/3,
-  list_object_versions/1, list_object_versions/2, list_object_versions/3,
-  copy_object/4, copy_object/5, copy_object/6,
-  delete_objects_batch/2, delete_objects_batch/3,
-  explore_dirstructure/3, explore_dirstructure/4,
-  delete_object/2, delete_object/3,
-  delete_object_version/3, delete_object_version/4,
-  get_object/2, get_object/3, get_object/4, get_object/5,
-  get_object_acl/2, get_object_acl/3, get_object_acl/4,
-  get_object_torrent/2, get_object_torrent/3,
-  get_object_metadata/2, get_object_metadata/3, get_object_metadata/4,
-  put_object/3, put_object/4, put_object/5, put_object/2,
-  set_object_acl/3, set_object_acl/4,
-  make_link/3, make_link/4,
-  make_get_url/3, make_get_url/4,
-  start_multipart/2, start_multipart/5,
-  upload_part/5, upload_part/7,
-  complete_multipart/4, complete_multipart/6,
-  abort_multipart/3, abort_multipart/6,
-  list_multipart_uploads/1, list_multipart_uploads/2,
-  get_object_url/2, get_object_url/3,
-  get_bucket_and_key/1,
-  list_bucket_inventory/1, list_bucket_inventory/2, list_bucket_inventory/3,
-  get_bucket_inventory/2, get_bucket_inventory/3,
-  put_bucket_inventory/2, put_bucket_inventory/3,
-  delete_bucket_inventory/2, delete_bucket_inventory/3, s3_request4_no_update/8,
-  list_object_names/3, list_object_names/2, get_objects_from_bucket/3, put_objects_from_dic/3,
-  delete_objects_from_bucket/2
-  , delete_objects/3, get_objects/3, get_objects/4, put_objects/3]).
+-export([new/2, new/3, new/4,%新建配置
+  configure/2, configure/3, configure/4, configure/5,%配置文件
+  create_bucket/1, create_bucket/2, create_bucket/3, create_bucket/4,%新建桶
+  check_bucket_access/1, check_bucket_access/2,%检查桶是否可以使用
+  delete_bucket/1, delete_bucket/2,%删除桶
+  get_bucket_attribute/2, get_bucket_attribute/3,%获取桶属性，仅支持acl属性
+  list_buckets/0, list_buckets/1,%列出所有桶
+  %%set_bucket_attribute/3, set_bucket_attribute/4,
+  %%get_bucket_policy/1, get_bucket_policy/2,
+  %%put_bucket_policy/2, put_bucket_policy/3,
+  %%get_bucket_lifecycle/1, get_bucket_lifecycle/2,
+  %%put_bucket_lifecycle/2, put_bucket_lifecycle/3,
+  %%delete_bucket_lifecycle/1, delete_bucket_lifecycle/2,
+  list_objects/1, list_objects/2, list_objects/3,%列出桶中所有对象
+  %%list_object_versions/1, list_object_versions/2, list_object_versions/3,
+  copy_object/4, copy_object/5, copy_object/6,%在桶之间复制对象
+  %%delete_objects_batch/2, delete_objects_batch/3,
+  explore_dirstructure/3, explore_dirstructure/4,%查看桶的某一目录下的所有对象
+  delete_object/2, delete_object/3,%删除对象
+  %%delete_object_version/3, delete_object_version/4,
+  get_object/2, get_object/3, get_object/4, get_object/5,%下载对象
+  get_object_acl/2, get_object_acl/3, get_object_acl/4,%获取对象访问控制列表（acl）
+  %%get_object_torrent/2, get_object_torrent/3,
+  get_object_metadata/2, get_object_metadata/3, get_object_metadata/4,%获取对象元数据（metadata）
+  put_object/2,put_object/3, put_object/4, put_object/5, %上传对象
+  %%set_object_acl/3, set_object_acl/4,
+  make_link/3, make_link/4,%生成相关链接
+  make_get_url/3, make_get_url/4,%生成可供第三方访问和下载对象的url
+  start_multipart/2, start_multipart/5,start_multipart/3,%开启分段上传
+  upload_part/5, upload_part/7,%分段上传
+  complete_multipart/4, complete_multipart/6,%结束分段上传（待调试）
+  abort_multipart/3, abort_multipart/6,%终止分段上传
+  list_multipart_uploads/1, list_multipart_uploads/2,list_multipart_uploads/4,%查看分段上传内容
+  get_object_url/2, get_object_url/3,%获取url（主机名和bucket名的拼接）
+  get_bucket_and_key/1,%从uri中解析出桶名和对象名
+  %%list_bucket_inventory/1, list_bucket_inventory/2, list_bucket_inventory/3,
+  %%get_bucket_inventory/2, get_bucket_inventory/3,
+  %%put_bucket_inventory/2, put_bucket_inventory/3,
+  %%delete_bucket_inventory/2, delete_bucket_inventory/3,
+  s3_request4_no_update/8,%请求的基础调用函数（测试专用）
+  list_object_names/2, list_object_names/3, %列出桶内的对象名
+  get_objects_from_bucket/3,%下载桶内所有对象（递归下载）
+  put_objects_from_dic/3,%上传目录内所有对象（递归上传）
+  delete_objects_from_bucket/2,%删除桶内所有对象（递归删除）
+  delete_objects/3,%批量删除对象
+  get_objects/3, get_objects/4, %批量下载对象
+  put_objects/3 %批量上传对象
+]).
 
 -ifdef(TEST).
 -export([encode_lifecycle/1]).
@@ -576,6 +582,7 @@ get_bucket_attribute(BucketName, AttributeName) ->
 
 -spec get_bucket_attribute(string(), s3_bucket_attribute_name(), aws_config()) -> term().
 
+%% Only support attribute acl now.
 get_bucket_attribute(BucketName, AttributeName, Config)
   when is_list(BucketName), is_atom(AttributeName) ->
   Attr = case AttributeName of
@@ -1107,7 +1114,10 @@ make_link(Expire_time, BucketName, Key) ->
 make_link(Expire_time, BucketName, Key, Config) ->
   EncodedKey = erlcloud_http:url_encode_loose(Key),
   {Sig, Expires} = sign_get(Expire_time, BucketName, EncodedKey, Config),
-  Host = lists:flatten([Config#aws_config.s3_scheme, BucketName, ".", Config#aws_config.s3_host, port_spec(Config)]),
+  Host =  case Config#aws_config.s3_bucket_after_host of
+            false -> lists:flatten([Config#aws_config.s3_scheme, BucketName, ".", Config#aws_config.s3_host, port_spec(Config)]);
+            true  -> lists:flatten([Config#aws_config.s3_scheme, Config#aws_config.s3_host, port_spec(Config), "/", BucketName])
+          end,
   SecurityTokenQS = case Config#aws_config.security_token of
                       undefined -> "";
                       SecurityToken -> "&x-amz-security-token=" ++ erlcloud_http:url_encode(SecurityToken)
@@ -1153,6 +1163,10 @@ make_get_url(Expire_time, BucketName, Key, Config) ->
 start_multipart(BucketName, Key)
   when is_list(BucketName), is_list(Key) ->
   start_multipart(BucketName, Key, [], [], default_config()).
+
+-spec start_multipart(string(), string(), aws_config()) -> {ok, proplist()} | {error, any()}.
+start_multipart(BucketName, Key, Config) ->
+  start_multipart(BucketName, Key, [], [], Config).
 
 -spec start_multipart(string(), string(), proplist(), [{string(), string()}], aws_config()) -> {ok, proplist()} | {error, any()}.
 start_multipart(BucketName, Key, Options, HTTPHeaders, Config)
