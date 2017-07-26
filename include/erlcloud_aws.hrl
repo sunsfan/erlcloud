@@ -22,7 +22,7 @@
   %%    * non-DNS-compliant name - 'path'
   %%    * DNS-compliant or empty name - 'vhost'
   s3_bucket_access_method=path::vhost|path|auto,
-  s3_bucket_after_host=false::boolean(),
+  s3_bucket_after_host=true::boolean(),
   sdb_host="sdb.amazonaws.com"::string(),
   elb_host="elasticloadbalancing.amazonaws.com"::string(),
   rds_host="rds.us-east-1.amazonaws.com"::string(),

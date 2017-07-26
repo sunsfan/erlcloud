@@ -848,8 +848,11 @@ get_object(BucketName, Key, Options, Config, Path) ->
            nomatch -> Key;
            _ -> [_ , Key2] = string:split(Key,"/",trailing) , Key2
          end,
-  {ok,File} = file:open(Path ++ Key1,[append]),
-  file:write(File,Body),
+  case Key1 of
+    [] -> pass;
+    _ -> {ok,File} = file:open(Path ++ Key1,[append]),
+      file:write(File,Body)
+  end,
   [{last_modified, proplists:get_value("last-modified", Headers)},
     {etag, proplists:get_value("etag", Headers)},
     {content_length, proplists:get_value("content-length", Headers)},
