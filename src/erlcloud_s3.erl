@@ -29,7 +29,7 @@
   s3_request4_no_update/8,%请求的基础调用函数（测试专用）
   list_object_names/2, list_object_names/3, %列出桶内的对象名
   get_objects_from_bucket/3,%下载桶内所有对象（递归下载）
-  put_objects_from_dic/3,%上传目录内所有对象（递归上传）
+  put_objects_from_dir/3,%上传目录内所有对象（递归上传）
   delete_objects_from_bucket/2,%删除桶内所有对象（递归删除）
   delete_objects/3,%批量删除对象
   get_objects/3, get_objects/4, %批量下载对象
@@ -1015,7 +1015,7 @@ extract_bucket(Node) ->
 
 -spec put_objects_from_dic(string(), aws_config(), string()) -> atom().
 
-put_objects_from_dic(BucketName, Config, Path) ->
+put_objects_from_dir(BucketName, Config, Path) ->
   {ok,FileList} = file:list_dir(Path),
   lists:map(fun(X) -> case filelib:is_dir(Path ++ X) of
                         false -> put_object(BucketName, Path ++ X, Config);
