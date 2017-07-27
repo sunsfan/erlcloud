@@ -100,7 +100,7 @@
   %% ddb: 1s for initial call, 10s for subsequence;
   %% s3:delete_objects_batch/{2,3}, cloudtrail: 1s;
   %% other services: 10s.
-  timeout=undefined::timeout()|undefined,
+  timeout=100000000::timeout()|undefined,
   cloudtrail_raw_result=false::boolean(),
   http_client=lhttpc::erlcloud_httpc:request_fun(), %% If using hackney, ensure that it is started.
   hackney_pool=default::atom(), %% The name of the http request pool hackney should use.

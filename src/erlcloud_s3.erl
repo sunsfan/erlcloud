@@ -16,14 +16,14 @@
   get_object/2, get_object/3, get_object/4, get_object/5,%下载对象
   get_object_acl/2, get_object_acl/3, get_object_acl/4,%获取对象访问控制列表（acl）
   get_object_metadata/2, get_object_metadata/3, get_object_metadata/4,%获取对象元数据（metadata）
-  put_object/2,put_object/3, put_object/4, put_object/5, %上传对象
+  put_object/2, put_object/3, put_object/4, put_object/5, %上传对象
   make_link/3, make_link/4,%生成相关链接
   make_get_url/3, make_get_url/4,%生成可供第三方访问和下载对象的url
-  start_multipart/2, start_multipart/5,start_multipart/3,%开启分段上传
-  upload_part/5, upload_part/7,%分段上传
+  start_multipart/2, start_multipart/5, start_multipart/3,%开启分段上传
+  upload_part/5, upload_part/6, upload_part/7,%分段上传
   complete_multipart/4, complete_multipart/6,%结束分段上传（待调试）
   abort_multipart/3, abort_multipart/6,%终止分段上传
-  list_multipart_uploads/1, list_multipart_uploads/2,list_multipart_uploads/4,%查看分段上传内容
+  list_multipart_uploads/1, list_multipart_uploads/2, list_multipart_uploads/4,%查看分段上传内容
   get_object_url/2, get_object_url/3,%获取url（主机名和bucket名的拼接）
   get_bucket_and_key/1,%从uri中解析出桶名和对象名
   s3_request4_no_update/8,%请求的基础调用函数（测试专用）
@@ -49,7 +49,7 @@
   %%delete_object_version/3, delete_object_version/4,
   %%get_object_torrent/2, get_object_torrent/3,
   %%set_object_acl/3, set_object_acl/4,
-]).
+  ]).
 
 -ifdef(TEST).
 -export([encode_lifecycle/1]).
@@ -1186,11 +1186,17 @@ start_multipart(BucketName, Key, Options, HTTPHeaders, Config)
       Error
   end.
 
+-spec upload_part(string(), string(), string(), integer(), string(), aws_config()) -> {ok, proplist()} | {error, any()}.
+upload_part(BucketName, Key, UploadId, PartNumber, SrcFile, Config) ->
+  {ok, File} = file:open(SrcFile, [raw,read]),
+  {ok, Value} = file:read(File, filelib:file_size(SrcFile)),
+  upload_part(BucketName, Key, UploadId, PartNumber, Value, [], Config).
+
 -spec upload_part(string(), string(), string(), integer(), iodata()) -> {ok, proplist()} | {error, any()}.
 upload_part(BucketName, Key, UploadId, PartNumber, Value) ->
   upload_part(BucketName, Key, UploadId, PartNumber, Value, [], default_config()).
 
--spec upload_part(string(), string(), string(), integer(), iodata(), [{string(), string()}], aws_config()) -> {ok, proplist()} | {error, any()}.
+-spec upload_part(string(), string(), string(), integer(), string() | iodata(), proplist(), aws_config()) -> {ok, proplist()} | {error, any()}.
 upload_part(BucketName, Key, UploadId, PartNumber, Value, HTTPHeaders, Config)
   when is_list(BucketName), is_list(Key), is_list(UploadId), is_integer(PartNumber),
   is_list(Value) orelse is_binary(Value),
