@@ -33,22 +33,22 @@
   delete_objects_from_bucket/2,%删除桶内所有对象（递归删除）
   delete_objects/3,%批量删除对象
   get_objects/3, get_objects/4, %批量下载对象
-  put_objects/3 %批量上传对象
-  %%set_bucket_attribute/3, set_bucket_attribute/4,
-  %%get_bucket_policy/1, get_bucket_policy/2,
-  %%put_bucket_policy/2, put_bucket_policy/3,
-  %%get_bucket_lifecycle/1, get_bucket_lifecycle/2,
-  %%put_bucket_lifecycle/2, put_bucket_lifecycle/3,
-  %%delete_bucket_lifecycle/1, delete_bucket_lifecycle/2,
-  %%list_bucket_inventory/1, list_bucket_inventory/2, list_bucket_inventory/3,
-  %%get_bucket_inventory/2, get_bucket_inventory/3,
-  %%put_bucket_inventory/2, put_bucket_inventory/3,
-  %%delete_bucket_inventory/2, delete_bucket_inventory/3,
-  %%list_object_versions/1, list_object_versions/2, list_object_versions/3,
-  %%delete_objects_batch/2, delete_objects_batch/3,
-  %%delete_object_version/3, delete_object_version/4,
-  %%get_object_torrent/2, get_object_torrent/3,
-  %%set_object_acl/3, set_object_acl/4,
+  put_objects/3, %批量上传对象
+  set_bucket_attribute/3, set_bucket_attribute/4,
+  get_bucket_policy/1, get_bucket_policy/2,
+  put_bucket_policy/2, put_bucket_policy/3,
+  get_bucket_lifecycle/1, get_bucket_lifecycle/2,
+  put_bucket_lifecycle/2, put_bucket_lifecycle/3,
+  delete_bucket_lifecycle/1, delete_bucket_lifecycle/2,
+  list_bucket_inventory/1, list_bucket_inventory/2, list_bucket_inventory/3,
+  get_bucket_inventory/2, get_bucket_inventory/3,
+  put_bucket_inventory/2, put_bucket_inventory/3,
+  delete_bucket_inventory/2, delete_bucket_inventory/3,
+  list_object_versions/1, list_object_versions/2, list_object_versions/3,
+  delete_objects_batch/2, delete_objects_batch/3,
+  delete_object_version/3, delete_object_version/4,
+  get_object_torrent/2, get_object_torrent/3,
+  set_object_acl/3, set_object_acl/4
   ]).
 
 -ifdef(TEST).
