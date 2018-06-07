@@ -1013,13 +1013,13 @@ extract_bucket(Node) ->
     {creation_date, "CreationDate", time}],
     Node).
 
--spec put_objects_from_dic(string(), aws_config(), string()) -> atom().
+-spec put_objects_from_dir(string(), aws_config(), string()) -> atom().
 
 put_objects_from_dir(BucketName, Config, Path) ->
   {ok,FileList} = file:list_dir(Path),
   lists:map(fun(X) -> case filelib:is_dir(Path ++ X) of
                         false -> put_object(BucketName, Path ++ X, Config);
-                        true -> put_objects_from_dic(BucketName,Config,Path ++ X ++ "/")
+                        true -> put_objects_from_dir(BucketName,Config,Path ++ X ++ "/")
                       end
             end, FileList),
   ok.
